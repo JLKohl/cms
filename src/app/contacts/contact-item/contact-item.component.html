@@ -1,0 +1,8 @@
+<button class="btn btn-success btn-sm">
+    New Contact
+  </button>
+  
+  <app-contact-item
+    *ngFor="let contact of contacts"
+    [contact]="contact">
+  </app-contact-item>
