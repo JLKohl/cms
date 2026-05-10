@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Contact } from './contacts.model';
 
 @Component({
   selector: 'app-contacts',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './contacts.component.css'
 })
 export class ContactsComponent {
-
+  selectedContact: Contact;
 }

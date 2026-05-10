@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Contact } from '../contacts.model';
 
 @Component({
@@ -8,6 +8,6 @@ import { Contact } from '../contacts.model';
   styleUrl: './contact-detail.component.css'
 })
 export class ContactDetailComponent {
-
+  @Input() contact!: Contact;
 
 }

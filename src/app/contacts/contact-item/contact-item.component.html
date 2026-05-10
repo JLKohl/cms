@@ -1,8 +1,7 @@
-<button class="btn btn-success btn-sm">
-    New Contact
-  </button>
-  
-  <app-contact-item
-    *ngFor="let contact of contacts"
-    [contact]="contact">
-  </app-contact-item>
+<div class="d-flex align-items-center mb-3" (click)="onClick()">
+    <img [src]="contact.imageUrl" width="40" class="me-2">
+
+    <div>
+        {{ contact.name }}
+    </div>
+</div>
