@@ -14,6 +14,7 @@ import { DocumentDetailComponent } from './documents/document-detail/document-de
 import { MessageListComponent } from './messages/message-list/message-list.component';
 import { MessageItemComponent } from './messages/message-item/message-item.component';
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -29,10 +30,12 @@ import { MessageEditComponent } from './messages/message-edit/message-edit.compo
     DocumentDetailComponent,
     MessageListComponent,
     MessageItemComponent,
-    MessageEditComponent
+    MessageEditComponent,
+
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

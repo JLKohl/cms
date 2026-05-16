@@ -8,5 +8,5 @@ import { Document } from './document.model';
   styleUrl: './documents.component.css',
 })
 export class DocumentsComponent {
-  selectedDocumentEvent:Document | null = null;
+  selectedDocument!: Document;
 }

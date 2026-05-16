@@ -2,7 +2,7 @@
     <div class="col-md-5">
   
       <app-document-list
-        (selectedDocument)="selectedDocumentEvent = $event">
+        (selectedDocumentEvent)="selectedDocument = $event">
       </app-document-list>
   
     </div>
@@ -10,8 +10,8 @@
     <div class="col-md-4">
   
       <app-document-detail
-        *ngIf="selectedDocumentEvent"
-        [document]="selectedDocumentEvent">
+        *ngIf="selectedDocument"
+        [document]="selectedDocument">
       </app-document-detail>
   
     </div>
