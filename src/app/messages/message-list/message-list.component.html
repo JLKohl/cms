@@ -15,8 +15,7 @@
   
             <app-message-item
             *ngFor="let message of messages"
-            [message]="message"
-            (messageSelected)="onMessageSelected($event)">
+            [message]="message">
             </app-message-item>
   
             </div>
@@ -25,9 +24,7 @@
   
         <div class="panel-footer">
           <!-- Message edit form will go here -->
-          <app-message-edit
-            (addMessageEvent)="onAddMessage($event)">
-            </app-message-edit>
+          <app-message-edit></app-message-edit>
         </div>
   
       </div>
