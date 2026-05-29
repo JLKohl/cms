@@ -1,10 +1,14 @@
 <a
-  class="list-group-item clearfix"
+  class="list-group-item clearfix w-100 h-100"
   [routerLink]="['/documents', document.id]"
   routerLinkActive="active">
 
-  <span class="pull-left title">
-    {{ document.name }}
-  </span>
+  <div class="card-body">
+
+    <span class="title">
+      {{ document.name }}
+    </span>
+
+  </div>
 
 </a>

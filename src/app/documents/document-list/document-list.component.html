@@ -14,11 +14,12 @@
   <div class="panel-body">
     <div class="row">
       <div
-        class="col-xs-12 col-sm-6 col-md-4"
+        class="col-xs-12 col-sm-6 col-md-4 mb-3 d-flex"
         *ngFor="let document of documents">
     
         <app-document-item
-          [document]="document">
+          [document]="document"
+          class="flex-fill">
         </app-document-item>
     
       </div>
