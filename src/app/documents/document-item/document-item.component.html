@@ -1,3 +1,10 @@
-<a class="list-group-item clearfix documentDiv" (click)="onClick()" >
-  {{ document?.name }}
+<a
+  class="list-group-item clearfix"
+  [routerLink]="['/documents', document.id]"
+  routerLinkActive="active">
+
+  <div>
+    <span class="pull-left title">{{ document.name }}</span>
+  </div>
+
 </a>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Contact } from '../contacts.model';
 import { ContactService } from '../contact.service';
 
@@ -6,9 +6,9 @@ import { ContactService } from '../contact.service';
   selector: 'app-contact-list',
   standalone: false,
   templateUrl: './contact-list.component.html',
-  styleUrl: './contact-list.component.css'
+  styleUrls: ['./contact-list.component.css']
 })
-export class ContactListComponent {
+export class ContactListComponent implements OnInit {
 
   contacts: Contact[] = [];
 
@@ -18,9 +18,5 @@ export class ContactListComponent {
     this.contacts = this.contactService.getContacts()
   }
 
-  onSelected(contact: Contact){
-    console.log("SELECTED FROM LIST:", contact);
-    this.contactService.contactSelectedEvent.emit(contact);
-  }
 
 }

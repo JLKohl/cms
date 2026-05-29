@@ -7,13 +7,7 @@ import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 })
 export class DocumentService {
     
-  documents: Document[] = [];
-
-  documentSelectedEvent = new EventEmitter<Document>();
-
-  constructor() {
-    this.documents = MOCKDOCUMENTS;
-  }
+  documents: Document[] = MOCKDOCUMENTS;
 
   getDocuments(): Document[] {
     return this.documents.slice();
