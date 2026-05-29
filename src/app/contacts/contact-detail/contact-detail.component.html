@@ -12,8 +12,11 @@
             [routerLink]="['/contacts', contact.id, 'edit']">
             Edit
             </a>
-            
-            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+            <a
+            class="btn btn-danger btn-sm"
+            (click)="onDelete()">
+            Delete
+            </a>
         </div>
      </div>
 
