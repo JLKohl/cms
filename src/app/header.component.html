@@ -6,27 +6,19 @@
     </div>
 
     <ul class="nav navbar-nav">
-      <li><a (click)="onSelected('documents')">Documents</a></li>
-      <li><a (click)="onSelected('messages')">Messages</a></li>
-      <li><a (click)="onSelected('contacts')">Contacts</a></li>
-    </ul>
-
-    <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown" appDropdown>
+      <li routerLinkActive="active">
+        <a routerLink="/documents">Documents</a>
+      </li>
     
-        <a href="#" class="dropdown-toggle">
-          User <span class="caret"></span>
-        </a>
+      <li routerLinkActive="active">
+        <a routerLink="/messages">Messages</a>
+      </li>
     
-        <ul class="dropdown-menu">
-          <li><a href="#">Login</a></li>
-          <li><a href="#">Other</a></li>
-          <hr>
-          <li><a href="#">Logout</a></li>
-        </ul>
-    
+      <li routerLinkActive="active">
+        <a routerLink="/contacts">Contacts</a>
       </li>
     </ul>
+
 
   </div>
 </nav>
