@@ -1,6 +1,9 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
 import { Contact } from './contacts.model';
 import { MOCKCONTACTS } from './MOCKCONTACTS';
+
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +12,7 @@ export class ContactService {
   
   contacts: Contact[] = [];
 
-  contactChangedEvent = new EventEmitter<Contact[]>();
+  contactChangedEvent = new Subject<Contact[]>();
 
   constructor() {
     this.contacts = MOCKCONTACTS;
@@ -30,7 +33,7 @@ export class ContactService {
     if (pos < 0) return;
   
     this.contacts.splice(pos, 1);
-    this.contactChangedEvent.emit(this.contacts.slice());
+    this.contactChangedEvent.next(this.contacts.slice());
   }
 
 }
