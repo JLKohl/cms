@@ -24,7 +24,7 @@ export class DocumentService {
     return this.documents.slice();
   }
 
-  getDocument(id: number): Document {
+  getDocument(id: string): Document {
     return this.documents.find(document => document.id === id)!;
   }
 
@@ -32,7 +32,8 @@ export class DocumentService {
     let maxId = 0;
   
     for (const document of this.documents) {
-      const currentId = +document.id;
+      const currentId = parseInt(document.id, 10);
+  
       if (currentId > maxId) {
         maxId = currentId;
       }
@@ -45,7 +46,7 @@ export class DocumentService {
     if (!newDocument) return;
   
     this.maxDocumentId++;
-    newDocument.id = this.maxDocumentId;
+    newDocument.id = this.maxDocumentId.toString();
   
     this.documents.push(newDocument);
   
@@ -55,7 +56,7 @@ export class DocumentService {
   updateDocument(originalDocument: Document, newDocument: Document) {
     if (!originalDocument || !newDocument) return;
   
-    const pos = this.documents.indexOf(originalDocument);
+    const pos = this.documents.findIndex(d => d.id === originalDocument.id);
     if (pos < 0) return;
   
     newDocument.id = originalDocument.id;
@@ -68,12 +69,14 @@ export class DocumentService {
   deleteDocument(document: Document) {
     if (!document) return;
   
-    const index = this.documents.indexOf(document);
-    if (index < 0) return;
+    const pos = this.documents.findIndex(d => d.id === document.id);
+    if (pos < 0) return;
   
-    this.documents.splice(index, 1);
+    this.documents.splice(pos, 1);
   
     this.documentListChangedEvent.next(this.documents.slice());
+
+    console.log(this.documents);
   }
 
 }

@@ -32,7 +32,8 @@ export class ContactService {
     let maxId = 0;
   
     for (const contact of this.contacts) {
-      const currentId = +contact.id;
+      const currentId = parseInt(contact.id, 10);
+  
       if (currentId > maxId) {
         maxId = currentId;
       }
