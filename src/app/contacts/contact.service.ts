@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Contact } from './contacts.model';
-import { MOCKCONTACTS } from './MOCKCONTACTS';
+
 
 
 @Injectable({
@@ -10,22 +11,43 @@ import { MOCKCONTACTS } from './MOCKCONTACTS';
 })
 export class ContactService {
   
-  contacts: Contact[] = MOCKCONTACTS;
+  contacts: Contact[] = [];
 
   maxContactId: number;
 
   contactChangedEvent = new Subject<Contact[]>();
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.maxContactId = this.getMaxId();
   }
 
-  getContacts(): Contact[] {
-    return this.contacts.slice()
+  getContacts() {
+    this.http
+      .get<Contact[]>('https://jlkcms-default-rtdb.firebaseio.com/contacts.json')
+      .subscribe({
+        next: (contacts: Contact[]) => {
+  
+          this.contacts = contacts ? contacts : [];
+  
+          this.maxContactId = this.getMaxId();
+  
+          this.contacts.sort((a: Contact, b: Contact) => {
+            if (a.name < b.name) return -1;
+            if (a.name > b.name) return 1;
+            return 0;
+          });
+  
+          this.contactChangedEvent.next(this.contacts.slice());
+        },
+  
+        error: (error: any) => {
+          console.log(error);
+        }
+      });
   }
 
   getContact(id: string): Contact {
-    return this.contacts.find(contact => contact.id === id)!;
+    return this.contacts.find(c => c.id.toString() === id.toString())!;
   }
 
   getMaxId(): number {
@@ -50,7 +72,7 @@ export class ContactService {
   
     this.contacts.push(newContact);
   
-    this.contactChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   }
   
   updateContact(originalContact: Contact, newContact: Contact) {
@@ -63,7 +85,23 @@ export class ContactService {
   
     this.contacts[pos] = newContact;
   
-    this.contactChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
+  }
+
+  storeContacts() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    this.http
+      .put(
+        'https://jlkcms-default-rtdb.firebaseio.com/contacts.json',
+        JSON.stringify(this.contacts),
+        { headers: headers }
+      )
+      .subscribe(() => {
+        this.storeContacts();
+      });
   }
 
   deleteContact(contact: Contact) {
@@ -74,6 +112,6 @@ export class ContactService {
   
     this.contacts.splice(pos, 1);
   
-    this.contactChangedEvent.next(this.contacts.slice());
+    this.storeContacts();
   } 
 }

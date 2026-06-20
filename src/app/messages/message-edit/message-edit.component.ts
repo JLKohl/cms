@@ -13,7 +13,7 @@ export class MessageEditComponent {
   @ViewChild('subjectInput') subjectInputRef!: ElementRef;
   @ViewChild('msgTextInput') msgTextInputRef!: ElementRef;
 
-  currentSender = '1';
+  currentSender = ' ';
 
   constructor(private messageService: MessageService) {}
 
