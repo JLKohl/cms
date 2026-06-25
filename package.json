@@ -17,7 +17,11 @@
     "@angular/platform-browser": "^20.3.20",
     "@angular/platform-browser-dynamic": "^20.3.20",
     "@angular/router": "^20.3.20",
+    "body-parser": "^2.3.0",
     "bootstrap": "^3.4.1",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "morgan": "^1.11.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
