@@ -16,34 +16,34 @@ router.get('/', (req, res, next) => {
 
 //Create a new doucment and send it to the database
 
-  router.post('/', (req, res, next) => {
-    const maxDocumentId = sequenceGenerator.nextId("documents");
+router.post('/', (req, res, next) => {
+  const maxDocumentId = sequenceGenerator.nextId("documents");
   
-    const document = new Document({
-      id: maxDocumentId,
-      name: req.body.name,
-      description: req.body.description,
-      url: req.body.url
+  const document = new Document({
+    id: maxDocumentId,
+    name: req.body.name,
+    description: req.body.description,
+    url: req.body.url
+  });
+  
+  document.save()
+    .then(createdDocument => {
+      res.status(201).json({
+      message: 'Document added successfully',
+      document: createdDocument
+      });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'An error occurred',
+        error: error
+      });
     });
-  
-    document.save()
-        .then(createdDocument => {
-            res.status(201).json({
-            message: 'Document added successfully',
-            document: createdDocument
-            });
-        })
-      .catch(error => {
-         res.status(500).json({
-            message: 'An error occurred',
-            error: error
-            });
-        });
 });
 
   //update a document
 
-  router.put('/:id', (req, res, next) => {
+router.put('/:id', (req, res, next) => {
     Document.findOne({ id: req.params.id })
       .then(document => {
         document.name = req.body.name;
