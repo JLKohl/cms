@@ -23,7 +23,7 @@ export class ContactService {
 
   getContacts() {
     this.http
-      .get<Contact[]>('https://jlkcms-default-rtdb.firebaseio.com/contacts.json')
+      .get<Contact[]>('http://localhost:3000/contacts')
       .subscribe({
         next: (contacts: Contact[]) => {
   
@@ -47,7 +47,7 @@ export class ContactService {
   }
 
   getContact(id: string): Contact {
-    return this.contacts.find(c => c.id.toString() === id.toString())!;
+    return this.contacts.find(c => c.id === id);
   }
 
   getMaxId(): number {
@@ -67,25 +67,45 @@ export class ContactService {
   addContact(newContact: Contact) {
     if (!newContact) return;
   
-    this.maxContactId++;
-    newContact.id = this.maxContactId.toString();
+    newContact.id = '';
   
-    this.contacts.push(newContact);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
   
-    this.storeContacts();
+    this.http.post<{ message: string, contact: Contact }>(
+      'http://localhost:3000/contacts',
+      newContact,
+      { headers: headers }
+    )
+    .subscribe((responseData) => {
+      this.contacts.push(responseData.contact);
+      this.contactChangedEvent.next(this.contacts.slice());
+    });
   }
   
   updateContact(originalContact: Contact, newContact: Contact) {
     if (!originalContact || !newContact) return;
   
-    const pos = this.contacts.indexOf(originalContact);
+    const pos = this.contacts.findIndex(c => c.id === originalContact.id);
+    
     if (pos < 0) return;
   
     newContact.id = originalContact.id;
   
-    this.contacts[pos] = newContact;
-  
-    this.storeContacts();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    this.http.put(
+      'http://localhost:3000/contacts/' + originalContact.id,
+      newContact,
+      { headers: headers }
+    )
+    .subscribe(() => {
+      this.contacts[pos] = newContact;
+      this.contactChangedEvent.next(this.contacts.slice());
+    });
   }
 
   storeContacts() {
@@ -93,25 +113,26 @@ export class ContactService {
       'Content-Type': 'application/json'
     });
   
-    this.http
-      .put(
-        'https://jlkcms-default-rtdb.firebaseio.com/contacts.json',
-        JSON.stringify(this.contacts),
-        { headers: headers }
-      )
-      .subscribe(() => {
-        this.storeContacts();
-      });
+    this.http.put(
+      'https://jlkcms-default-rtdb.firebaseio.com/contacts.json',
+      JSON.stringify(this.contacts),
+      { headers: headers }
+    )
+    .subscribe(() => {
+      this.contactChangedEvent.next(this.contacts.slice());
+    });
   }
 
   deleteContact(contact: Contact) {
     if (!contact) return;
   
-    const pos = this.contacts.indexOf(contact);
+    const pos = this.contacts.findIndex(c => c.id === contact.id);
     if (pos < 0) return;
   
-    this.contacts.splice(pos, 1);
-  
-    this.storeContacts();
+    this.http.delete('http://localhost:3000/contacts/' + contact.id)
+    .subscribe(() => {
+      this.contacts.splice(pos, 1);
+      this.contactChangedEvent.next(this.contacts.slice());
+    });
   } 
 }

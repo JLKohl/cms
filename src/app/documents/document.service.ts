@@ -2,19 +2,16 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Document} from './document.model';
-
+import { Document } from './document.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentService {
-    
+
   documents: Document[] = [];
-
   maxDocumentId: number;
-
-  documentListChangedEvent  = new Subject<Document[]>();
+  documentListChangedEvent = new Subject<Document[]>();
 
   constructor(private http: HttpClient) {
     this.maxDocumentId = this.getMaxId();
@@ -22,25 +19,24 @@ export class DocumentService {
 
   getDocuments() {
     this.http
-      .get<Document[]>('https://jlkcms-default-rtdb.firebaseio.com/documents.json')
+      .get<Document[]>('http://localhost:3000/documents')
       .subscribe(
         (documents: Document[]) => {
-  
+
           this.documents = documents ? documents : [];
-  
+
           // 1. update max id
           this.maxDocumentId = this.getMaxId();
-  
+
           // 2. sort documents by name
           this.documents.sort((a: Document, b: Document) => {
             if (a.name < b.name) return -1;
             if (a.name > b.name) return 1;
             return 0;
           });
-  
+
           // 3. emit updated list
           this.documentListChangedEvent.next(this.documents.slice());
-  
         },
         (error: any) => {
           console.log(error);
@@ -54,15 +50,15 @@ export class DocumentService {
 
   getMaxId(): number {
     let maxId = 0;
-  
+
     for (const document of this.documents) {
       const currentId = parseInt(document.id, 10);
-  
+
       if (currentId > maxId) {
         maxId = currentId;
       }
     }
-  
+
     return maxId;
   }
 
@@ -70,7 +66,7 @@ export class DocumentService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-  
+
     this.http
       .put(
         'https://jlkcms-default-rtdb.firebaseio.com/documents.json',
@@ -82,41 +78,71 @@ export class DocumentService {
       });
   }
 
-  addDocument(newDocument: Document) {
-    if (!newDocument) return;
-  
-    this.maxDocumentId++;
-    newDocument.id = this.maxDocumentId.toString();
-  
-    this.documents.push(newDocument);
-  
-    this.storeDocuments();
+  addDocument(document: Document) {
+    if (!document) {
+      return;
+    }
+
+    document.id = '';
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    this.http.post<{ message: string, document: Document }>(
+      'http://localhost:3000/documents',
+      document,
+      { headers: headers }
+    )
+    .subscribe((responseData) => {
+      this.documents.push(responseData.document);
+      this.documentListChangedEvent.next(this.documents.slice());
+    });
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
-    if (!originalDocument || !newDocument) return;
-  
+    if (!originalDocument || !newDocument) {
+      return;
+    }
+
     const pos = this.documents.findIndex(d => d.id === originalDocument.id);
-    if (pos < 0) return;
-  
+
+    if (pos < 0) {
+      return;
+    }
+
     newDocument.id = originalDocument.id;
-  
-    this.documents[pos] = newDocument;
-  
-    this.storeDocuments();
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    this.http.put(
+      'http://localhost:3000/documents/' + originalDocument.id,
+      newDocument,
+      { headers: headers }
+    )
+    .subscribe(() => {
+      this.documents[pos] = newDocument;
+      this.documentListChangedEvent.next(this.documents.slice());
+    });
   }
 
   deleteDocument(document: Document) {
-    if (!document) return;
-  
+    if (!document) {
+      return;
+    }
+
     const pos = this.documents.findIndex(d => d.id === document.id);
-    if (pos < 0) return;
-  
-    this.documents.splice(pos, 1);
-  
-    this.storeDocuments();
 
-    console.log(this.documents);
+    if (pos < 0) {
+      return;
+    }
+
+    this.http.delete('http://localhost:3000/documents/' + document.id)
+      .subscribe(() => {
+        this.documents.splice(pos, 1);
+        this.documentListChangedEvent.next(this.documents.slice());
+      });
   }
-
 }

@@ -8,6 +8,7 @@ const Contact = require('../models/contact');
 //get all of the contacts from the database
 router.get('/', (req, res, next) => {
     Contact.find()
+        .populate('group')
         .then(docs => res.status(200).json({ documents: docs }))
         .catch(err => res.status(500).json({ error: err }));
 });
