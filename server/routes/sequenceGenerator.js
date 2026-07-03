@@ -1,4 +1,4 @@
-const Sequence = require('../models/sequences');
+const Sequence = require('../models/sequence');
 
 let sequenceId;
 let maxDocumentId;
