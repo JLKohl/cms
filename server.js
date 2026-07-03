@@ -5,6 +5,7 @@ var http = require('http');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
 
 // import the routing file to handle the default (index) route
 var index = require('./server/routes/app');
@@ -24,6 +25,15 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use(logger('dev')); // Tell express to use the Morgan logger
+
+// establish a connection to the mongo database
+mongoose.connect('mongodb://localhost:27017/cms')
+  .then(() => {
+    console.log('Connected to database!');
+  })
+  .catch((err) => {
+    console.log('Connection failed: ' + err);
+  });
 
 // Add support for CORS
 app.use((req, res, next) => {
