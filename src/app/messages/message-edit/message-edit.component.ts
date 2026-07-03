@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
+import { Contact } from '../../contacts/contacts.model';
 
 @Component({
   selector: 'app-message-edit',
@@ -13,7 +14,7 @@ export class MessageEditComponent {
   @ViewChild('subjectInput') subjectInputRef!: ElementRef;
   @ViewChild('msgTextInput') msgTextInputRef!: ElementRef;
 
-  currentSender = ' ';
+  currentSender:Contact;
 
   constructor(private messageService: MessageService) {}
 

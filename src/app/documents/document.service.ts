@@ -19,29 +19,27 @@ export class DocumentService {
 
   getDocuments() {
     this.http
-      .get<Document[]>('http://localhost:3000/documents')
-      .subscribe(
-        (documents: Document[]) => {
-
-          this.documents = documents ? documents : [];
-
-          // 1. update max id
+      .get<{ documents: Document[] }>('http://localhost:3000/documents')
+      .subscribe({
+        next: (response) => {
+  
+          this.documents = response.documents ? response.documents : [];
+  
           this.maxDocumentId = this.getMaxId();
-
-          // 2. sort documents by name
+  
           this.documents.sort((a: Document, b: Document) => {
             if (a.name < b.name) return -1;
             if (a.name > b.name) return 1;
             return 0;
           });
-
-          // 3. emit updated list
+  
           this.documentListChangedEvent.next(this.documents.slice());
         },
-        (error: any) => {
+  
+        error: (error: any) => {
           console.log(error);
         }
-      );
+      });
   }
 
   getDocument(id: string): Document {

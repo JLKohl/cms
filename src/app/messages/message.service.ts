@@ -15,22 +15,23 @@ export class MessageService {
 
   getMessages() {
     this.http
-      .get<Message[]>('http://localhost:3000/messages')
+      .get<{ messages: Message[] }>('http://localhost:3000/messages')
       .subscribe({
-        next: (messages: Message[]) => {
-
-          this.messages = messages ? messages : [];
-
+        next: (response) => {
+  
+          this.messages = response.messages ? response.messages : [];
+  
           this.maxMessageId = this.getMaxId();
-
+  
           this.messages.sort((a: Message, b: Message) => {
             if (a.subject < b.subject) return -1;
             if (a.subject > b.subject) return 1;
             return 0;
           });
-
+  
           this.messageChangedEvent.emit(this.messages.slice());
         },
+  
         error: (error: any) => {
           console.log(error);
         }

@@ -9,7 +9,7 @@ const Contact = require('../models/contact');
 router.get('/', (req, res, next) => {
     Contact.find()
         .populate('group')
-        .then(docs => res.status(200).json({ documents: docs }))
+        .then(docs => res.status(200).json({ contacts: docs }))
         .catch(err => res.status(500).json({ error: err }));
 });
 

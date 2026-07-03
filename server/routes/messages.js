@@ -9,9 +9,14 @@ const Message = require('../models/message');
 
 router.get('/', (req, res, next) => {
     Message.find()
-        .then(docs => res.status(200).json({ messages: docs }))
-        .catch(err => res.status(500).json({ error: err }));
-});
+      .populate('sender')
+      .then(messages => {
+        res.status(200).json({ messages: messages });
+      })
+      .catch(err => {
+        res.status(500).json({ error: err });
+      });
+  });
 
 //Create a new message and send it to the database
 
